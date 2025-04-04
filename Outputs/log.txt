@@ -1,0 +1,36 @@
+
+Meme File Name: meme_2025-04-05-00-06_1.png
+AI Basic Instructions: You will create funny memes that are clever and original, and not cliche or lame.
+AI Special Image Instructions: The images should be photographic.
+User Prompt: 'funny cats'
+Chat Bot Meme Text: Error generating meme text
+Chat Bot Image Prompt: A confused cat looking at a computer
+Image Generation Platform: clipdrop
+
+
+Meme File Name: meme_2025-04-05-00-13_1.png
+AI Basic Instructions: You will create funny memes that are clever and original, and not cliche or lame.
+AI Special Image Instructions: The images should be photographic.
+User Prompt: 'funny dogs'
+Chat Bot Meme Text: Error generating meme text
+Chat Bot Image Prompt: A confused cat looking at a computer
+Image Generation Platform: clipdrop
+
+
+Meme File Name: meme_2025-04-05-00-17_1.png
+AI Basic Instructions: You will create funny memes that are clever and original, and not cliche or lame.
+AI Special Image Instructions: The images should be photographic.
+User Prompt: 'dog'
+Chat Bot Meme Text: When you're trying to enjoy a quiet evening at home but your dog keeps bringing you his favorite squeaky toy.
+Chat Bot Image Prompt: A dog excitedly presenting a squeaky toy to its owner in a cozy living room, photograph
+Image Generation Platform: clipdrop
+
+
+Meme File Name: meme_2025-04-05-00-19_1.png
+AI Basic Instructions: You will create funny memes that are clever and original, and not cliche or lame.
+AI Special Image Instructions: The images should be photographic.
+User Prompt: 'dog laughing at human'
+Chat Bot Meme Text: When your human trips over air and blames it on the rug.
+Chat Bot Image Prompt: A golden retriever laughing hysterically, a human sprawled on the floor behind him, a rug slightly askew, photograph
+Image Generation Platform: clipdrop
+
