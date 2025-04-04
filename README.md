@@ -1,81 +1,115 @@
-# Full Stack AI Meme Generator
+# AI Meme Generator with Gemini API
 
-#### Allows you to automatically generate meme images from start to finish using AI. It will generate the text for the meme (optionally based on a user-provided concept), create a related image, and combine the two into a final image file.
-----------------------
-<p align="center"><img src="https://github.com/ThioJoe/Full-Stack-AI-Meme-Generator/assets/12518330/2d8ee7cc-a7d3-40ca-a894-64e10085db14" width=35%></p>
+An AI-powered meme generator that creates clever and original memes using Google's Gemini API for text generation and ClipDrop for image generation.
 
 ## Features
 
-- Uses Google's Gemini Pro to generate the text and image prompt for the meme.
-- Automatically sends image prompt request to an AI image generator of choice, then combines the text and image
-- Allows customization of the meme generation process through various settings.
-- Generates memes with a user-provided subject or concept, or you can let the AI decide.
-- Logs meme generation details for future reference.
+- Uses Gemini API for creative and contextual meme text generation
+- Generates high-quality images using ClipDrop API
+- Customizable settings for meme generation
+- Supports various image styles and themes
+- Automatic text placement on images
+- Saves generated memes with timestamps
+
+## Prerequisites
+
+- Python 3.8 or higher
+- Google Gemini API key
+- ClipDrop API key
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/SahilAli987/MemeGenerator.git
+cd MemeGenerator
+```
+
+2. Install required packages:
+```bash
+pip install -r Requirements.txt
+```
+
+3. Set up API keys:
+   - Copy `assets/api_keys_empty.ini` to `api_keys.ini`
+   - Add your API keys to `api_keys.ini`:
+     ```ini
+     [API Keys]
+     Gemini_API_Key = your_gemini_api_key_here
+     ClipDrop_API_Key = your_clipdrop_api_key_here
+     ```
+
+4. Configure settings (optional):
+   - Modify `settings.ini` to customize:
+     - Text model (default: gemini-1.5-pro-002)
+     - Temperature
+     - Image generation settings
+     - Output preferences
 
 ## Usage
 
-1. For Python Version Only: Clone the repository & Install the necessary packages.
-2. Obtain at least a Gemini API key, but it is recommended to also use APIs from Clipdrop or Stability AI (DreamStudio) for the image generation stage.
-3. Edit the settings variables in the settings.ini file.
-4. Run the script and enter a meme subject or concept when prompted (optional).
-
-## Settings
-
-Various settings for the meme generation process can be customized:
-
-- Gemini API settings: Choose the text model and temperature for generating the meme text and image prompt.
-- Image platform settings: Choose the platform for generating the meme image. Options include StabilityAI's DreamStudio and ClipDrop.
-- Basic Meme Instructions: You can tell the AI about the general style or qualities to apply to all memes, such as using dark humor, surreal humor, wholesome, etc. 
-- Special Image Instructions: You can tell the AI how to generate the image itself (more specifically, how to write the image prompt). You can specify a style such as being a photograph, drawing, etc, or something more specific such as always using cats in the pictures.
-
-## Example Image Output With Log
-<p align="center"><img src="https://github.com/ThioJoe/Full-Stack-AI-Meme-Generator/assets/12518330/6400c973-f7af-45ed-a6ad-c062c2be0b64" width="400"></p>
-
-```
-Meme File Name: meme_2023-07-13-15-34_ZYKCV.png
-AI Basic Instructions: You will create funny memes.
-AI Special Image Instructions: The images should be photographic.
-User Prompt: 'cats'
-Chat Bot Meme Text: "When you finally find the perfect napping spot... on the laptop."
-Chat Bot Image Prompt: "A photograph of a cat laying down on an open laptop."
-Image Generation Platform: clipdrop
+1. Run the meme generator:
+```bash
+python AIMemeGenerator.py
 ```
 
-## Optional Arguments
-### You can also pass options into the program via command-line arguments whether using the python version or exe version.
+2. Follow the prompts to:
+   - Enter a topic or theme for your meme
+   - Wait for the AI to generate text and image
+   - Find your generated meme in the `Outputs` folder
 
-#### • API Key Arguments: Not necessary if the keys are already in api_keys.ini
-`--geminikey`: Gemini API key.
+## Example Topics
 
-`--clipdropkey`: ClipDrop API key.
+Try these topics for fun memes:
+- "programming bugs"
+- "monday mornings"
+- "cats being cats"
+- "artificial intelligence"
+- "weekend plans"
 
-`--stabilitykey`: Stability AI API key.
+## Configuration
 
-#### • Basic Meme Arguments
+### Basic Settings (settings.ini)
+```ini
+[Basic]
+Basic_Instructions = You will create funny memes that are clever and original
+Image_Special_Instructions = The images should be photographic
 
-`--userprompt`: A meme subject or concept to send to the chat bot. If not specified, the user will be prompted to enter a subject or concept.
+[AI Settings]
+Text_Model = gemini-1.5-pro-002
+Temperature = 0.7
+Image_Platform = clipdrop
+```
 
-`--memecount`: The number of memes to create. If using arguments and not specified, the default is 1.
+## Output
 
-#### • Advanced Meme Settings Arguments
+Generated memes are saved in the `Outputs` folder with timestamps:
+- Format: `meme_YYYY-MM-DD-HH-MM_N.png`
+- A log file (`log.txt`) tracks all generations
 
-`--imageplatform`: The image platform to use. If using arguments and not specified, the default is 'clipdrop'. Possible options: 'stability', 'clipdrop'.
+## Troubleshooting
 
-`--temperature`: The temperature to use for the chat bot. If using arguments and not specified, the default is 1.0.
+1. API Key Issues:
+   - Ensure your API keys are correctly set in `api_keys.ini`
+   - Verify your Gemini API key has sufficient credits
+   - Check ClipDrop API key validity
 
-`--basicinstructions`: The basic instructions to use for the chat bot. If using arguments and not specified, the default is "You will create funny memes that are clever and original, and not cliche or lame.".
+2. Generation Errors:
+   - Check internet connection
+   - Verify Python version compatibility
+   - Ensure all dependencies are installed correctly
 
-`--imagespecialinstructions`: The image special instructions to use for the chat bot. The default is "The images should be photographic.".
+3. Image Generation Issues:
+   - Make sure prompts are clear and appropriate
+   - Check ClipDrop API status
+   - Verify output directory permissions
 
-#### • Binary arguments: Just adding them activates them, no text needs to accompany them
+## License
 
-`--nouserinput`: If specified, this will prevent any user input prompts, and will instead use default values or other arguments.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-`--nofilesave`: If specified, the meme will not be saved to a file, and only returned as virtual file part of memeResultsDictsList.
+## Acknowledgments
 
-## How to Build Exe Yourself
-#### Note: To build the exe you have to set up the python environment anyway, so by that point you can just run the python version of the script. But if you want the build the exe yourself anyway here is how:
-1. Ensure required packages are installed
-2. Additionally, install PyInstaller: `pip install pyinstaller` (If using a virtual environment, install it into that)
-3. Run this command in terminal from within the project directory: `python -m PyInstaller main.spec`
-
+- Google Gemini API for text generation
+- ClipDrop API for image generation
+- Python imaging libraries for meme composition
