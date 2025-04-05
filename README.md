@@ -7,14 +7,17 @@ A full-stack web application that uses AI to generate custom memes. Powered by G
 ### Core Functionality
 - 🤖 AI-powered meme text generation using Gemini 1.5 Pro
 - 🎨 High-quality image generation
-- 💾 Local storage for meme history
+- 💾 Local storage for meme history with deletion capabilities
 - 👤 User authentication system
 - 📱 Responsive design for all devices
 
 ### User Interface
 - 🎭 Interactive meme generation interface
 - 📝 Simple prompt-based creation
-- 📚 Sidebar with meme history
+- 📚 Sidebar with meme history management
+  - Individual meme deletion
+  - Bulk history clearing
+  - Date-based organization
 - 🌈 Animated background elements
 - 🎨 Modern, dark theme design
 
@@ -75,7 +78,10 @@ python app.py
    - View your meme history in the sidebar
    - Organized by today and previous 7 days
    - Click any history item to reload past memes
+   - Delete individual memes with the trash icon
+   - Clear all history with one click
    - Local storage ensures your history persists
+   - Hover interactions for easy management
 
 4. **Profile & Settings**
    - Access your profile page
