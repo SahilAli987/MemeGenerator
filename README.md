@@ -1,108 +1,88 @@
-# AI Meme Generator with Gemini API
+# AI Meme Generator
 
-An AI-powered meme generator that creates clever and original memes using Google's Gemini API for text generation and ClipDrop for image generation.
+A full-stack AI-powered meme generator that creates original memes using Google's Gemini 1.5 Pro for text generation and ClipDrop for image generation.
 
 ## Features
 
-- Uses Gemini API for creative and contextual meme text generation
-- Generates high-quality images using ClipDrop API
-- Customizable settings for meme generation
-- Supports various image styles and themes
-- Automatic text placement on images
-- Saves generated memes with timestamps
+- Uses Gemini 1.5 Pro for creative and contextual meme text generation
+- Generates custom images using ClipDrop API
+- Modern web interface built with Flask and Tailwind CSS
+- Automatic text placement and formatting
+- Error handling and fallback responses
+- Configurable settings for customization
 
-## Prerequisites
-
-- Python 3.8 or higher
-- Google Gemini API key
-- ClipDrop API key
-
-## Installation
+## Setup Instructions
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/SahilAli987/MemeGenerator.git
-cd MemeGenerator
+git clone https://github.com/yourusername/Full-Stack-AI-Meme-Generator.git
+cd Full-Stack-AI-Meme-Generator
 ```
 
-2. Install required packages:
+2. Install the required packages:
 ```bash
 pip install -r Requirements.txt
 ```
 
-3. Set up API keys:
-   - Copy `assets/api_keys_empty.ini` to `api_keys.ini`
-   - Add your API keys to `api_keys.ini`:
-     ```ini
-     [API Keys]
-     Gemini_API_Key = your_gemini_api_key_here
-     ClipDrop_API_Key = your_clipdrop_api_key_here
-     ```
+3. Set up your API keys:
+   - Create an `api_keys.ini` file in the root directory
+   - Add your API keys in the following format:
+   ```ini
+   [Keys]
+   Gemini = your_gemini_api_key
+   ClipDrop = your_clipdrop_api_key
+   StabilityAI = your_stabilityai_api_key
+   ```
 
 4. Configure settings (optional):
    - Modify `settings.ini` to customize:
-     - Text model (default: gemini-1.5-pro-002)
+     - Model settings
      - Temperature
-     - Image generation settings
      - Output preferences
+     - Font settings
 
 ## Usage
 
-1. Run the meme generator:
+1. Start the Flask server:
 ```bash
-python AIMemeGenerator.py
+python app.py
 ```
 
-2. Follow the prompts to:
-   - Enter a topic or theme for your meme
-   - Wait for the AI to generate text and image
-   - Find your generated meme in the `Outputs` folder
+2. Open your web browser and navigate to:
+```
+http://localhost:5000
+```
 
-## Example Topics
-
-Try these topics for fun memes:
-- "programming bugs"
-- "monday mornings"
-- "cats being cats"
-- "artificial intelligence"
-- "weekend plans"
+3. Enter your meme concept in the text box and click "Generate Meme"
 
 ## Configuration
 
-### Basic Settings (settings.ini)
+### settings.ini
 ```ini
-[Basic]
-Basic_Instructions = You will create funny memes that are clever and original
-Image_Special_Instructions = The images should be photographic
-
 [AI Settings]
 Text_Model = gemini-1.5-pro-002
 Temperature = 0.7
 Image_Platform = clipdrop
 ```
 
-## Output
+## Requirements
 
-Generated memes are saved in the `Outputs` folder with timestamps:
-- Format: `meme_YYYY-MM-DD-HH-MM_N.png`
-- A log file (`log.txt`) tracks all generations
+- Python 3.8+
+- Google Gemini API key
+- ClipDrop API key (for image generation)
+- Internet connection for API access
 
-## Troubleshooting
+## Error Handling
 
-1. API Key Issues:
-   - Ensure your API keys are correctly set in `api_keys.ini`
-   - Verify your Gemini API key has sufficient credits
-   - Check ClipDrop API key validity
+The application includes robust error handling for:
+- API connection issues
+- Content generation failures
+- Image processing errors
+- Invalid configurations
 
-2. Generation Errors:
-   - Check internet connection
-   - Verify Python version compatibility
-   - Ensure all dependencies are installed correctly
+## Contributing
 
-3. Image Generation Issues:
-   - Make sure prompts are clear and appropriate
-   - Check ClipDrop API status
-   - Verify output directory permissions
+Feel free to submit issues, fork the repository, and create pull requests for any improvements.
 
 ## License
 
@@ -110,6 +90,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Google Gemini API for text generation
-- ClipDrop API for image generation
-- Python imaging libraries for meme composition
+- Google Gemini for AI text generation
+- ClipDrop for image generation
+- Flask for web framework
+- Tailwind CSS for styling

@@ -3,91 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Meme Generator Chat</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>AI Meme Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .chat-container {
-            height: calc(100vh - 200px);
+        body {
+            font-family: 'Inter', sans-serif;
         }
-        .message {
-            max-width: 80%;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 10px;
+        .loading {
+            animation: spin 1s linear infinite;
         }
-        .user-message {
-            background-color: #e2e8f0;
-            margin-left: auto;
-        }
-        .bot-message {
-            background-color: #4299e1;
-            color: white;
-            margin-right: auto;
-        }
-        .meme-image {
-            max-width: 100%;
-            max-height: 300px;
-            object-fit: contain;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mb-8">AI Meme Generator Chat</h1>
-        
-        <div class="bg-white rounded-lg shadow-lg p-4 chat-container overflow-y-auto" id="chatContainer">
-            <div class="message bot-message">
-                Hello! I'm your AI Meme Generator. What kind of meme would you like to create?
-            </div>
-        </div>
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">AI Meme Generator</h1>
+            <p class="text-gray-600">Create hilarious memes with the power of AI</p>
+        </header>
 
-        <div class="mt-4 flex gap-2">
-            <input type="text" id="userInput" 
-                   class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                   placeholder="Enter a topic for your meme...">
-            <button onclick="sendMessage()" 
-                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                Generate
-            </button>
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
+            <div class="mb-6">
+                <label for="topic" class="block text-sm font-medium text-gray-700 mb-2">Enter a topic for your meme</label>
+                <div class="flex gap-2">
+                    <input type="text" id="topic" 
+                           class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="e.g., programming bugs, monday mornings, cats">
+                    <button onclick="generateMeme()" 
+                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Generate
+                    </button>
+                </div>
+            </div>
+
+            <div id="loading" class="hidden text-center py-8">
+                <div class="loading inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+                <p class="mt-2 text-gray-600">Generating your meme...</p>
+            </div>
+
+            <div id="result" class="hidden">
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Generated Meme</h3>
+                    <img id="memeImage" class="w-full rounded-lg shadow-md" alt="Generated Meme">
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">Meme Details</h4>
+                    <p id="memeText" class="text-gray-600 mb-2"></p>
+                    <p id="imagePrompt" class="text-gray-600 text-sm"></p>
+                </div>
+            </div>
+
+            <div id="error" class="hidden text-center py-4 text-red-600">
+                <p>An error occurred while generating the meme. Please try again.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        const chatContainer = document.getElementById('chatContainer');
-        const userInput = document.getElementById('userInput');
+        async function generateMeme() {
+            const topic = document.getElementById('topic').value;
+            if (!topic) {
+                alert('Please enter a topic');
+                return;
+            }
 
-        function addMessage(text, isUser = false) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-            messageDiv.textContent = text;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function addMeme(memeText, imageUrl) {
-            const memeDiv = document.createElement('div');
-            memeDiv.className = 'message bot-message';
-            
-            const textP = document.createElement('p');
-            textP.textContent = memeText;
-            memeDiv.appendChild(textP);
-            
-            const img = document.createElement('img');
-            img.src = imageUrl;
-            img.className = 'meme-image mt-2';
-            img.alt = 'Generated meme';
-            memeDiv.appendChild(img);
-            
-            chatContainer.appendChild(memeDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        async function sendMessage() {
-            const topic = userInput.value.trim();
-            if (!topic) return;
-
-            addMessage(topic, true);
-            userInput.value = '';
+            // Show loading state
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('error').classList.add('hidden');
 
             try {
                 const response = await fetch('/generate', {
@@ -99,23 +86,24 @@
                 });
 
                 const data = await response.json();
-                
+
                 if (data.success) {
-                    addMeme(data.meme_text, data.image_url);
+                    // Display the generated meme
+                    document.getElementById('memeImage').src = data.meme_path;
+                    document.getElementById('memeText').textContent = data.text;
+                    document.getElementById('imagePrompt').textContent = `Image Prompt: ${data.image_prompt}`;
+                    
+                    document.getElementById('result').classList.remove('hidden');
                 } else {
-                    addMessage('Sorry, there was an error generating your meme. Please try again.');
+                    throw new Error(data.error || 'Failed to generate meme');
                 }
             } catch (error) {
-                addMessage('Sorry, there was an error connecting to the server. Please try again.');
+                console.error('Error:', error);
+                document.getElementById('error').classList.remove('hidden');
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
             }
         }
-
-        // Allow sending message with Enter key
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
     </script>
 </body>
 </html> 

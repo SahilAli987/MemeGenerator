@@ -238,14 +238,21 @@ def get_api_keys(api_key_filename="api_keys.ini", args=None):
     # Try to read keys from config file. Default value of '' will be used if not found
     try:
         keys_dict = get_config(api_key_filename)
+        # Get keys from the [Keys] section
         gemini_key = keys_dict.get('Gemini', '')
         clipdrop_key = keys_dict.get('ClipDrop', '')
         stability_key = keys_dict.get('StabilityAI', '')
+        
+        # Print keys for debugging (masked)
+        print("Loaded API Keys (masked):")
+        print(f"Gemini: {'*' * (len(gemini_key)-4) + gemini_key[-4:] if gemini_key else 'Not found'}")
+        print(f"ClipDrop: {'*' * (len(clipdrop_key)-4) + clipdrop_key[-4:] if clipdrop_key else 'Not found'}")
+        
     except FileNotFoundError:
-        print("Config not found, checking for command line arguments.")  # Could not read from config file, will try command-line arguments next
+        print("Config not found, checking for command line arguments.")
 
     # Checks if any arguments are not None, and uses those values if so
-    if not all(value is None for value in vars(args).values()):
+    if args and not all(value is None for value in vars(args).values()):
         gemini_key = args.geminikey if args.geminikey else gemini_key
         clipdrop_key = args.clipdropkey if args.clipdropkey else clipdrop_key
         stability_key = args.stabilitykey if args.stabilitykey else stability_key
@@ -277,15 +284,38 @@ def initialize_api_clients(apiKeys, image_platform):
     
     # Set up the model configuration
     generation_config = {
-        "temperature": 1.0,
+        "temperature": 0.7,
         "top_p": 1,
         "top_k": 1,
         "max_output_tokens": 2048,
     }
     
-    # Initialize the model
-    model = genai.GenerativeModel(model_name="gemini-pro",
-                                generation_config=generation_config)
+    # Initialize safety settings
+    safety_settings = [
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+        }
+    ]
+    
+    # Initialize the model with the specified model name and configuration
+    model = genai.GenerativeModel(
+        model_name="gemini-1.5-pro-002",
+        generation_config=generation_config,
+        safety_settings=safety_settings
+    )
 
     # Initialize Stability API if needed
     stability_api = None
@@ -468,36 +498,72 @@ def parse_meme(message):
         return None
     
 # Sends the user message to the chat bot and returns the chat bot's response
-def send_and_receive_message(gemini_key, text_model, userMessage, conversationTemp, temperature=0.5):
+def send_and_receive_message(gemini_key, text_model, userMessage, conversationTemp, temperature=0.7):
     # Configure the Gemini API
     genai.configure(api_key=gemini_key)
 
     try:
-        # Initialize the model with configuration for Gemini 1.5 Pro
-        generation_config = {
-            "temperature": temperature,
-            "top_p": 1,
-            "top_k": 1,
-            "max_output_tokens": 2048,
-        }
+        # Initialize the model with configuration for Gemini 1.5
+        generation_config = genai.types.GenerationConfig(
+            temperature=temperature,
+            top_p=1,
+            top_k=1,
+            max_output_tokens=2048,
+        )
 
-        # Initialize the model with the specified model name and configuration
-        model = genai.GenerativeModel(model_name=text_model, generation_config=generation_config)
-        
-        # Add system prompt to chat history
-        system_message = next((msg["content"] for msg in conversationTemp if msg["role"] == "system"), None)
-        prompt = f"{system_message}\n\nUser request: {userMessage}"
-        
+        # Set up safety settings
+        safety_settings = [
+            {
+                "category": "HARM_CATEGORY_HARASSMENT",
+                "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            },
+            {
+                "category": "HARM_CATEGORY_HATE_SPEECH",
+                "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            },
+            {
+                "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            },
+            {
+                "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+            }
+        ]
+
+        # Initialize the model
+        model = genai.GenerativeModel(
+            model_name="gemini-1.5-pro-002",
+            generation_config=generation_config,
+            safety_settings=safety_settings
+        )
+
+        # Get system prompt from conversation history
+        system_prompt = next((msg["content"] for msg in conversationTemp if msg["role"] == "system"), "")
+
+        # Create the full prompt
+        prompt = f"{system_prompt}\n\nUser request: {userMessage}"
+
         print("Sending request to write meme...")
-        response = model.generate_content(prompt)
-        
-        if response.text:
-            return response.text
-        else:
-            return "Meme Text: \"Error generating meme text\"\nImage Prompt: A confused cat looking at a computer"
+
+        # Generate content with proper error handling
+        try:
+            response = model.generate_content(prompt)
+            if hasattr(response, 'text'):
+                return response.text
+            else:
+                print("Warning: Response did not contain expected text attribute")
+                return """Meme Text: "Error: Could not generate meme text"
+Image Prompt: A confused cat looking at a computer screen with error messages"""
+        except Exception as e:
+            print(f"Error in content generation: {str(e)}")
+            return """Meme Text: "Error: AI had trouble generating the meme"
+Image Prompt: A frustrated cat typing on a keyboard"""
+
     except Exception as e:
-        print(f"Error generating content: {str(e)}")
-        return "Meme Text: \"Error generating meme text\"\nImage Prompt: A confused cat looking at a computer"
+        print(f"Error in model initialization: {str(e)}")
+        return """Meme Text: "Error: Could not initialize the AI model"
+Image Prompt: A cat looking confused at a broken computer"""
 
 
 def create_meme(image_path, top_text, filePath, fontFile, noFileSave=False, min_scale=0.05, buffer_scale=0.03, font_scale=1):
@@ -774,6 +840,107 @@ def generate(
         sys.exit()
     
     return memeResultsDictsList
+
+def generate_meme(topic):
+    try:
+        # Load configuration using existing function
+        settings = get_settings()
+        
+        # Get API keys using existing function with default args
+        apiKeys = get_api_keys(args=None)
+        
+        # Validate API keys
+        validate_api_keys(apiKeys, settings.get('Image_Platform', 'clipdrop'))
+        
+        # Initialize API clients
+        stability_api, model = initialize_api_clients(apiKeys, settings.get('Image_Platform', 'clipdrop'))
+        
+        # Create system prompt
+        basic_instructions = settings.get('Basic_Instructions', 'You will create funny memes that are clever and original, and not cliche or lame.')
+        image_special_instructions = settings.get('Image_Special_Instructions', 'The images should be photographic.')
+        systemPrompt = construct_system_prompt(basic_instructions, image_special_instructions)
+        conversation = [{"role": "system", "content": systemPrompt}]
+        
+        # Generate meme text and image using the loaded settings
+        chatResponse = send_and_receive_message(
+            apiKeys.gemini_key,
+            settings.get('Text_Model', 'gemini-1.5-pro-002'),
+            topic,
+            conversation,
+            float(settings.get('Temperature', 0.7))
+        )
+        
+        # Parse the response
+        memeDict = parse_meme(chatResponse)
+        if not memeDict:
+            return {
+                'success': False,
+                'error': 'Failed to parse meme text and image prompt'
+            }
+            
+        meme_text = memeDict['meme_text']
+        image_prompt = memeDict['image_prompt']
+        
+        print("\nMeme Text:", meme_text)
+        print("Image Prompt:", image_prompt)
+        
+        # Generate image using existing function
+        virtual_image_file = image_generation_request(
+            apiKeys, 
+            image_prompt, 
+            settings.get('Image_Platform', 'clipdrop'),
+            model,
+            stability_api
+        )
+        
+        if not virtual_image_file:
+            return {
+                'success': False,
+                'error': 'Failed to generate image'
+            }
+        
+        # Set up file path for the meme
+        filePath, fileName = set_file_path(
+            settings.get('Base_File_Name', 'meme'),
+            settings.get('Output_Folder', 'Outputs')
+        )
+        
+        # Check font file
+        font_file = check_font(settings.get('Font_File', 'arial.ttf'))
+        
+        # Create the meme using existing function
+        virtualMemeFile = create_meme(
+            virtual_image_file,
+            meme_text,
+            filePath,
+            font_file,
+            noFileSave=False
+        )
+        
+        # Write to log file
+        write_log_file(
+            topic,
+            {'meme_text': meme_text, 'image_prompt': image_prompt},
+            filePath,
+            settings.get('Output_Folder', 'Outputs'),
+            basic_instructions,
+            image_special_instructions,
+            settings.get('Image_Platform', 'clipdrop')
+        )
+        
+        return {
+            'success': True,
+            'meme_path': '/outputs/' + fileName,
+            'text': meme_text,
+            'image_prompt': image_prompt
+        }
+    except Exception as e:
+        print(f"Error generating meme: {str(e)}")
+        traceback.print_exc()  # Print the full error traceback
+        return {
+            'success': False,
+            'error': str(e)
+        }
 
 if __name__ == "__main__":
     generate()
