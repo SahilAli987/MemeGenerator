@@ -114,6 +114,15 @@ python app.py
 - Session-based authentication
 - Input validation and sanitization
 
+## Outputs
+![image](https://github.com/user-attachments/assets/5764d2a3-f285-4939-9a43-38279b4297e1)
+![image](https://github.com/user-attachments/assets/4e4b0c7d-faf4-4f54-a30e-6a38453cd14e)
+![image](https://github.com/user-attachments/assets/65be2f9b-baa8-47a1-a504-6e6b9a2c0850)
+![image](https://github.com/user-attachments/assets/20e5cd07-687e-4f98-8da8-205d1f0780d3)
+![image](https://github.com/user-attachments/assets/5ba28b03-adf2-4e43-8b64-6c7bbae8d1ea)
+![image](https://github.com/user-attachments/assets/ad475f3c-1e37-411c-9a6d-194e1e438ae4)
+
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
