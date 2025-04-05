@@ -24,6 +24,10 @@ A full-stack web application that uses AI to generate custom memes. Powered by G
 - 🔐 Secure authentication
 - 📊 User activity tracking
 
+### Outputs
+![image](https://github.com/user-attachments/assets/0a3383e2-3641-4644-b88e-84e60fcc44f2)
+
+
 ## Getting Started
 
 ### Prerequisites
