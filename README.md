@@ -8,6 +8,7 @@ A full-stack web application that uses AI to generate custom memes. Powered by G
 - 🤖 AI-powered meme text generation using Gemini 1.5 Pro
 - 🎨 High-quality image generation
 - 💾 Local storage for meme history with deletion capabilities
+- ⬇️ Direct meme download functionality
 - 👤 User authentication system
 - 📱 Responsive design for all devices
 
@@ -18,6 +19,7 @@ A full-stack web application that uses AI to generate custom memes. Powered by G
   - Individual meme deletion
   - Bulk history clearing
   - Date-based organization
+- 💫 One-click meme downloads
 - 🌈 Animated background elements
 - 🎨 Modern, dark theme design
 
@@ -73,6 +75,8 @@ python app.py
    - Enter your meme concept/prompt
    - Click "Generate Meme" to create
    - View your generated meme instantly
+   - Download your meme with one click
+   - Automatic filename generation based on prompt
 
 3. **History & Management**
    - View your meme history in the sidebar
