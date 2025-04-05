@@ -66,7 +66,7 @@ class MissingGeminiKeyError(Exception):
         
         super().__init__(full_error_message)
         self.simple_message = message
-
+        
 class MissingOpenAIKeyError(Exception):
     def __init__(self, message):
         full_error_message = f"No OpenAI API key found. OpenAI API key is required - In order to generate text for the meme text and image prompt. Please add your OpenAI API key to the api_keys.ini file."

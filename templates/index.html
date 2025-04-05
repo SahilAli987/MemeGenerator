@@ -1,109 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Meme Generator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .loading {
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-</head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">AI Meme Generator</h1>
-            <p class="text-gray-600">Create hilarious memes with the power of AI</p>
-        </header>
+{% extends "base.html" %}
 
-        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
-            <div class="mb-6">
-                <label for="topic" class="block text-sm font-medium text-gray-700 mb-2">Enter a topic for your meme</label>
-                <div class="flex gap-2">
-                    <input type="text" id="topic" 
-                           class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="e.g., programming bugs, monday mornings, cats">
-                    <button onclick="generateMeme()" 
-                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Generate
-                    </button>
+{% block title %}AI Meme Generator{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sidebar-item:hover {
+        background-color: rgba(52, 53, 65, 0.9);
+    }
+</style>
+{% endblock %}
+
+{% block navigation %}
+<a href="/about" class="text-sm font-medium hover:text-blue-400 transition-colors duration-200">About Us</a>
+<a href="/profile" class="text-sm font-medium hover:text-blue-400 transition-colors duration-200">Profile</a>
+{% endblock %}
+
+{% block content %}
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-[#202123] h-screen fixed left-0 top-0 flex flex-col z-10">
+        <!-- Sidebar Header -->
+        <div class="p-4 border-b border-gray-600 flex items-center justify-between">
+            <button id="newMemeBtn" class="text-sm font-medium bg-transparent hover:bg-gray-700 rounded-lg px-3 py-2 flex items-center gap-2 transition-colors duration-200">
+                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                New Meme
+            </button>
+        </div>
+
+        <!-- History Sections -->
+        <div class="flex-1 overflow-y-auto">
+            <div class="p-2">
+                <div class="text-xs text-gray-400 font-medium uppercase py-2 px-2">Today</div>
+                <div id="today-history" class="space-y-1">
+                    <!-- Today's memes will be added here dynamically -->
                 </div>
-            </div>
 
-            <div id="loading" class="hidden text-center py-8">
-                <div class="loading inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
-                <p class="mt-2 text-gray-600">Generating your meme...</p>
-            </div>
-
-            <div id="result" class="hidden">
-                <div class="mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Generated Meme</h3>
-                    <img id="memeImage" class="w-full rounded-lg shadow-md" alt="Generated Meme">
+                <div class="text-xs text-gray-400 font-medium uppercase py-2 px-2 mt-4">Previous 7 Days</div>
+                <div id="week-history" class="space-y-1">
+                    <!-- Previous week's memes will be added here dynamically -->
                 </div>
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <h4 class="text-sm font-medium text-gray-700 mb-2">Meme Details</h4>
-                    <p id="memeText" class="text-gray-600 mb-2"></p>
-                    <p id="imagePrompt" class="text-gray-600 text-sm"></p>
-                </div>
-            </div>
-
-            <div id="error" class="hidden text-center py-4 text-red-600">
-                <p>An error occurred while generating the meme. Please try again.</p>
             </div>
         </div>
     </div>
 
-    <script>
-        async function generateMeme() {
-            const topic = document.getElementById('topic').value;
-            if (!topic) {
-                alert('Please enter a topic');
-                return;
+    <!-- Main Content Area -->
+    <div class="flex-1 ml-64">
+        <div class="max-w-2xl mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-center mb-8">AI Meme Generator</h1>
+            
+            <div class="space-y-4">
+                <textarea id="prompt" rows="4" placeholder="Enter your meme concept here..."
+                    class="w-full px-4 py-3 rounded-lg bg-[#2A2B32] border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 resize-none"></textarea>
+                
+                <div class="flex justify-center">
+                    <button id="generateBtn" class="bg-blue-600 text-white rounded-lg px-6 py-2 font-medium hover:bg-blue-700 transition-colors duration-200">
+                        Generate Meme
+                    </button>
+                </div>
+
+                <div id="result" class="mt-8 text-center hidden">
+                    <img id="memeImage" class="max-w-full h-auto mx-auto rounded-lg shadow-lg" alt="Generated meme">
+                </div>
+
+                <div id="loading" class="mt-8 text-center hidden">
+                    <p class="text-gray-400">Generating your meme...</p>
+                </div>
+
+                <div id="error" class="mt-8 text-center hidden">
+                    <p class="text-red-400">An error occurred. Please try again.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Store meme history in localStorage
+    const memeHistory = JSON.parse(localStorage.getItem('memeHistory') || '[]');
+
+    function addToHistory(prompt, imageUrl) {
+        const now = new Date();
+        const meme = {
+            prompt,
+            imageUrl,
+            timestamp: now.toISOString()
+        };
+        memeHistory.unshift(meme);
+        localStorage.setItem('memeHistory', JSON.stringify(memeHistory));
+        updateHistoryDisplay();
+    }
+
+    function updateHistoryDisplay() {
+        const todaySection = document.getElementById('today-history');
+        const weekSection = document.getElementById('week-history');
+        
+        todaySection.innerHTML = '';
+        weekSection.innerHTML = '';
+
+        const now = new Date();
+        const today = now.toDateString();
+        const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+
+        memeHistory.forEach(meme => {
+            const memeDate = new Date(meme.timestamp);
+            const historyItem = createHistoryItem(meme);
+
+            if (memeDate.toDateString() === today) {
+                todaySection.appendChild(historyItem);
+            } else if (memeDate > weekAgo) {
+                weekSection.appendChild(historyItem);
             }
+        });
+    }
 
-            // Show loading state
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('result').classList.add('hidden');
-            document.getElementById('error').classList.add('hidden');
+    function createHistoryItem(meme) {
+        const div = document.createElement('div');
+        div.className = 'sidebar-item p-2 rounded-lg hover:bg-[#2A2B32] cursor-pointer text-sm';
+        div.innerHTML = `
+            <div class="truncate">${meme.prompt}</div>
+            <div class="text-xs text-gray-400">${new Date(meme.timestamp).toLocaleTimeString()}</div>
+        `;
+        div.onclick = () => {
+            document.getElementById('prompt').value = meme.prompt;
+            document.getElementById('memeImage').src = meme.imageUrl;
+            document.getElementById('result').classList.remove('hidden');
+        };
+        return div;
+    }
 
-            try {
-                const response = await fetch('/generate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ topic }),
-                });
+    // Generate button handler
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+        const prompt = document.getElementById('prompt').value;
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const error = document.getElementById('error');
+        const memeImage = document.getElementById('memeImage');
 
-                const data = await response.json();
+        if (!prompt) return;
 
-                if (data.success) {
-                    // Display the generated meme
-                    document.getElementById('memeImage').src = data.meme_path;
-                    document.getElementById('memeText').textContent = data.text;
-                    document.getElementById('imagePrompt').textContent = `Image Prompt: ${data.image_prompt}`;
-                    
-                    document.getElementById('result').classList.remove('hidden');
-                } else {
-                    throw new Error(data.error || 'Failed to generate meme');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('error').classList.remove('hidden');
-            } finally {
-                document.getElementById('loading').classList.add('hidden');
+        loading.classList.remove('hidden');
+        result.classList.add('hidden');
+        error.classList.add('hidden');
+
+        try {
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt }),
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                memeImage.src = imageUrl;
+                result.classList.remove('hidden');
+                addToHistory(prompt, imageUrl);
+            } else {
+                error.classList.remove('hidden');
             }
+        } catch (err) {
+            error.classList.remove('hidden');
+        } finally {
+            loading.classList.add('hidden');
         }
-    </script>
-</body>
-</html> 
+    });
+
+    // New meme button handler
+    document.getElementById('newMemeBtn').addEventListener('click', () => {
+        document.getElementById('prompt').value = '';
+        document.getElementById('result').classList.add('hidden');
+        document.getElementById('error').classList.add('hidden');
+    });
+
+    // Initialize history display
+    updateHistoryDisplay();
+</script>
+{% endblock %} 

@@ -1,88 +1,112 @@
 # AI Meme Generator
 
-A full-stack AI-powered meme generator that creates original memes using Google's Gemini 1.5 Pro for text generation and ClipDrop for image generation.
+A full-stack web application that uses AI to generate custom memes. Powered by Google's Gemini 1.5 Pro for text generation and advanced image generation APIs.
 
 ## Features
 
-- Uses Gemini 1.5 Pro for creative and contextual meme text generation
-- Generates custom images using ClipDrop API
-- Modern web interface built with Flask and Tailwind CSS
-- Automatic text placement and formatting
-- Error handling and fallback responses
-- Configurable settings for customization
+### Core Functionality
+- 🤖 AI-powered meme text generation using Gemini 1.5 Pro
+- 🎨 High-quality image generation
+- 💾 Local storage for meme history
+- 👤 User authentication system
+- 📱 Responsive design for all devices
 
-## Setup Instructions
+### User Interface
+- 🎭 Interactive meme generation interface
+- 📝 Simple prompt-based creation
+- 📚 Sidebar with meme history
+- 🌈 Animated background elements
+- 🎨 Modern, dark theme design
+
+### User Management
+- ✨ User registration and login
+- 👤 Personal profile pages
+- 🔐 Secure authentication
+- 📊 User activity tracking
+
+## Getting Started
+
+### Prerequisites
+- Python 3.8 or higher
+- Flask
+- Google Generative AI package
+- Other dependencies listed in `requirements.txt`
+
+### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/Full-Stack-AI-Meme-Generator.git
-cd Full-Stack-AI-Meme-Generator
+git clone https://github.com/yourusername/ai-meme-generator.git
+cd ai-meme-generator
 ```
 
-2. Install the required packages:
+2. Install dependencies:
 ```bash
-pip install -r Requirements.txt
+pip install -r requirements.txt
 ```
 
 3. Set up your API keys:
-   - Create an `api_keys.ini` file in the root directory
-   - Add your API keys in the following format:
-   ```ini
-   [Keys]
-   Gemini = your_gemini_api_key
-   ClipDrop = your_clipdrop_api_key
-   StabilityAI = your_stabilityai_api_key
-   ```
+Create a file named `api_keys.ini` in the root directory with the following structure:
+```ini
+[Keys]
+Gemini = your_gemini_api_key
+ClipDrop = your_clipdrop_api_key
+StabilityAI = your_stabilityai_api_key
+```
 
-4. Configure settings (optional):
-   - Modify `settings.ini` to customize:
-     - Model settings
-     - Temperature
-     - Output preferences
-     - Font settings
-
-## Usage
-
-1. Start the Flask server:
+4. Run the application:
 ```bash
 python app.py
 ```
 
-2. Open your web browser and navigate to:
-```
-http://localhost:5000
-```
+## Usage
 
-3. Enter your meme concept in the text box and click "Generate Meme"
+1. **Registration/Login**
+   - Create an account or log in to access the meme generator
+   - Secure authentication system protects your memes
 
-## Configuration
+2. **Creating Memes**
+   - Click "New Meme" or use the main input area
+   - Enter your meme concept/prompt
+   - Click "Generate Meme" to create
+   - View your generated meme instantly
 
-### settings.ini
-```ini
-[AI Settings]
-Text_Model = gemini-1.5-pro-002
-Temperature = 0.7
-Image_Platform = clipdrop
-```
+3. **History & Management**
+   - View your meme history in the sidebar
+   - Organized by today and previous 7 days
+   - Click any history item to reload past memes
+   - Local storage ensures your history persists
 
-## Requirements
+4. **Profile & Settings**
+   - Access your profile page
+   - View your meme creation history
+   - Manage your account settings
 
-- Python 3.8+
-- Google Gemini API key
-- ClipDrop API key (for image generation)
-- Internet connection for API access
+## Technical Details
 
-## Error Handling
+### Frontend
+- HTML5, CSS3 (Tailwind CSS)
+- JavaScript (Vanilla JS)
+- Dynamic animations and transitions
+- Responsive layout design
+- Local storage for meme history
 
-The application includes robust error handling for:
-- API connection issues
-- Content generation failures
-- Image processing errors
-- Invalid configurations
+### Backend
+- Flask web framework
+- Google Generative AI (Gemini 1.5 Pro)
+- Image generation APIs
+- User authentication system
+- Session management
+
+### Security
+- Secure password handling
+- Protected API endpoints
+- Session-based authentication
+- Input validation and sanitization
 
 ## Contributing
 
-Feel free to submit issues, fork the repository, and create pull requests for any improvements.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
@@ -90,7 +114,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Google Gemini for AI text generation
-- ClipDrop for image generation
-- Flask for web framework
-- Tailwind CSS for styling
+- Google Generative AI for Gemini 1.5 Pro
+- ClipDrop API for image generation
+- Stability AI for additional image processing
+- The Flask team for the awesome framework
+- Tailwind CSS for the styling utilities
